@@ -1,4 +1,4 @@
-# TASK: CREATION OF A NOTE MANAGER
+# TASK: CREATION OF A SMART NOTE MANAGER
 
 
 from datetime import datetime
@@ -28,7 +28,7 @@ note.display()
 
 class TextNote(Note):
     """
-    A subclass of Note that inherits its behavior.
+    A subclass of Note that inherits its behavior also
     Overrides the display method
     """
     def display(self):
