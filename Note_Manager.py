@@ -1,4 +1,4 @@
-# TASK : Create a base note class that stores the contents and record the datetime
+# TASK: CREATION OF A NOTE MANAGER
 
 
 from datetime import datetime
@@ -6,7 +6,6 @@ from datetime import datetime
 # 1. Base Class: Note
 class Note:
     """
-    A class to represent a simple note.
     Attributes:
         content (str): The content of the note.
         created_at (datetime): The timestamp when the note is created.
