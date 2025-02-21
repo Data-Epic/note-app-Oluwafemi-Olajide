@@ -23,3 +23,18 @@ class Note:
 # Creating an instance of Note
 note = Note("I'm trying my best, this code must run oo")
 note.display()
+
+# 2. Derived Class: TextNote (inherits from Note)
+class TextNote(Note):
+    """
+    A subclass of Note that inherits its behavior.
+    Overrides the display method
+    """
+    def display(self):
+        return super().display()
+
+# Creating an instance of TextNote
+textnote = TextNote("Please u dis code run")
+print(textnote.display())
+
+
