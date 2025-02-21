@@ -1,5 +1,6 @@
 # TASK : Create a base note class that stores the contents and record the datetime
 
+
 from datetime import datetime
 
 # 1. Base Class: Note
@@ -20,11 +21,12 @@ class Note:
         print(f"Note created at {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Content: {self.content}")
 
-# Creating an instance of Note
+# Creating a object instance for the code
 note = Note("I'm trying my best, this code must run oo")
 note.display()
 
 # 2. Derived Class: TextNote (inherits from Note)
+
 class TextNote(Note):
     """
     A subclass of Note that inherits its behavior.
@@ -33,8 +35,38 @@ class TextNote(Note):
     def display(self):
         return super().display()
 
-# Creating an instance of TextNote
+# Creating a object instance
 textnote = TextNote("Please u dis code run")
 print(textnote.display())
+
+# 2.1 Derived Class: TimeReminder (inherits from Note)
+
+"""Inherits from the Note class and  functionality 
+    extended to include a reminder time.
+
+    Attributes:
+        content (str): The content of the note.
+        reminder_time (str): The time set for the reminder.
+        created_at (datetime): Inherited from Note, stores when the note was created.
+
+    Methods:
+        display(): This will Overrides the display() method to show both 
+                   the reminder time and the note details.
+    """
+
+class TimeReminder(Note):
+    def __init__(self, content, reminder_time):
+        super().__init__(content)  # Calls the constructor of the Note class
+        self.reminder_time = reminder_time
+
+    def display(self):
+        print(f"Reminder Time: {self.reminder_time}") # I tried calling these at end of the code it doesnt wrk(CodeBlocks)
+        return super().display()
+
+# Creating an object instance for the code
+reminder = TimeReminder("Submission date", "21-02-2025 11:59 PM")
+
+print(reminder.display())
+
 
 
