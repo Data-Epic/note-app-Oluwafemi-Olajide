@@ -68,5 +68,9 @@ reminder = TimeReminder("Submission date", "21-02-2025 11:59 PM")
 
 print(reminder.display())
 
+# 3. NoteManager Class (To Include other functionalities)
+class NoteManager: # I really dont know how to go about this section of the task
+    pass
+
 
 
