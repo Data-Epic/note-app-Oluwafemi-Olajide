@@ -1,5 +1,5 @@
 from datetime import datetime
-
+# 1.
 class Note:
     """Base class of Note"""
 
@@ -18,7 +18,7 @@ class Note:
     """ Encapsulation : Note class encapsulates attributes (content, created_at, note_id)
          Abstraction : display() method provides a simple way to retrieve note details without exposing its internal attributes."""
 
-# Inheritance from the Base class (TextNote, ReminderNote)
+#2. Inheritance from the Base class (TextNote, ReminderNote)
 
 class TextNote(Note):  # This includes a text note that extends the base note class to specify its a text note
     def display(self):  # To override the base note class method
@@ -39,7 +39,7 @@ class ReminderNote(Note):  # This is a note with a reminder date and time in it
 ## OOP CONCEPTS USED HERE :
     """Inheritance, Polymorphism, Encapsulation"""
 
-# 4. Defining the Note Manager Class
+# 3. Defining the Note Manager Class
 
 class NotesManager:
     """What does this do? It Manages, Deletes, Views, and Searches the Note content"""
@@ -85,7 +85,7 @@ class NotesManager:
         return "\n".join(results) if results else "No matching note found."
     """We can see the use of encapsulation to protect the content of self.notes, which can only be accessed through these methods only."""
 
-# 5. The User Interface Code
+# 4. The User Interface Code
 
 def main():
     manager = NotesManager()
