@@ -122,8 +122,8 @@ def test_search_note_not_found():
 # This helps me test multiple cases at once.
 
 @pytest.mark.parametrize("note_type, content, reminder_time, expected", [
-    ("text", "Param Note 1", None, "Note added successfully!"),  # Normal text note
-    ("reminder", "Param Reminder", "2025-05-01 12:00", "Note added successfully!"),  # Reminder with time
+    ("text", "write any note content", None, "Note added successfully!"),  # Normal text note
+    ("reminder", "Reminder message", "2025-05-01 12:00", "Note added successfully!"),  # Reminder with time
     ("reminder", "Missing time", None, "Error: Reminder note requires a reminder time."),  # Missing time
     ("invalid", "Wrong Type", None, "Error: Invalid note type."),  # Invalid type
 ])
