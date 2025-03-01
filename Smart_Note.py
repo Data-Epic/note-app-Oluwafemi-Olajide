@@ -1,5 +1,7 @@
 from datetime import datetime
 
+# 1. Create a base class Note
+
 class Note:
     """Base class of Note"""
 
@@ -18,7 +20,8 @@ class Note:
     """ Encapsulation : Note class encapsulates attributes (content, created_at, note_id)
          Abstraction : display() method provides a simple way to retrieve note details without exposing its internal attributes."""
 
-# Inheritance from the Base class (TextNote, ReminderNote)
+# 2. Create a Inheritance from the Base class (TextNote, ReminderNote)
+
 class TextNote(Note):  # This includes a text note that extends the base note class to specify its a text note
     def display(self):  # To override the base note class method
         return f"Text Note {super().display()}"
@@ -38,7 +41,7 @@ class ReminderNote(Note):
     ## OOP CONCEPTS USED HERE :
     """Inheritance, Polymorphism, Encapsulation"""
 
-# 4. Defining the Note Manager Class
+# 3. Defining the Note Manager Class
 
 class NotesManager:
     """What does this do? It Manages, Deletes, Views, and Searches the Note content"""
@@ -46,6 +49,7 @@ class NotesManager:
         self.notes = []
 
     def add_note(self, note_type, content, reminder_time=None):
+        
         # Check for duplicate notes
         for note in self.notes:
             if note.content == content and isinstance(note, (TextNote if note_type == "text" else ReminderNote)):
@@ -75,7 +79,7 @@ class NotesManager:
     Abstraction: Users just need to call add_note(), without worrying about object creation details
     Polymorphism: The method here works for both the TextNote and ReminderNote, despite their differences"""
 
-    # Delete Action
+    # 3.1. Delete Action
     def delete_note(self, note_id):  # Deleting notes by their unique ID
         for note in self.notes:
             if note.note_id == note_id:
@@ -83,20 +87,20 @@ class NotesManager:
                 return f"Note {note_id} deleted successfully."
         return "Error: Note ID not found."
 
-    # Showing Action
+    # 3.2. Showing Action
     def show_note(self):  # Displaying the notes
         if not self.notes:
             return "No notes available."
         return "\n".join(note.display() for note in self.notes)
         """We can see polymorphism in action here where the display() method is called on different note types, having different implementations."""
 
-    # Searching for a note
+    # 3.3. Searching for a note
     def search_note(self, keyword):
         results = [note.display() for note in self.notes if keyword.lower() in note.content.lower()]
         return "\n".join(results) if results else "No matching note found."
     """We can see the use of encapsulation to protect the content of self.notes, which can only be accessed through these methods only."""
 
-# 5. The User Interface Code
+# 4. The User Interface Code
 
 def main():
     manager = NotesManager()
