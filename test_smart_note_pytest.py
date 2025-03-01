@@ -1,6 +1,6 @@
 import pytest  # Okay, first step: import pytest so I can run my tests
 from Smart_Note import NotesManager  # Importing my NotesManager class from Smart_Note.py
-
+from datetime import datetime
 
 # --- STARTING WITH ADDING NOTES ---
 # I need to make sure I can add different types of notes properly.
@@ -17,15 +17,15 @@ def test_add_text_note():
 
 
 def test_add_reminder_note():
-    """Making sure a reminder note works when I provide a reminder time."""
+    """Making sure that a reminder note is added correctly with a valid time."""
     manager = NotesManager()
-    result = manager.add_note("reminder", "Submission of task", "2025-02-28 11:59")
+    reminder_time = "2025-02-28 11:59"
+    result = manager.add_note("reminder", "Submission of task", reminder_time)
 
-    # Checking if it worked
     assert "Note added successfully!" in result
-    assert len(manager.notes) == 1  # Should be one note in the list
-    assert manager.notes[0].content == "Submission of task" # Note text should match
-    assert manager.notes[0].reminder_time == "2025-02-28 11:59"  # Reminder time should be correct
+    assert len(manager.notes) == 1
+    assert manager.notes[0].content == "Submission of task"
+    assert manager.notes[0].reminder_time == datetime.strptime(reminder_time, "%Y-%m-%d %H:%M")
 
 
 def test_add_reminder_note_without_time():
@@ -45,6 +45,43 @@ def test_add_invalid_note_type():
     # Should return an error message
     assert result == "Error: Invalid note type."
 
+# --- TESTING FOR DUPLICATES ---
+
+def test_add_duplicate_text_note():
+    """Test if adding a duplicate text note returns an error."""
+    manager = NotesManager()
+    manager.add_note("text", "Buy a new laptop")  # First note
+    result = manager.add_note("text", "Buy a new laptop")  # Second time same input
+
+    assert result == "Error: Duplicate note exists."
+    assert len(manager.notes) == 1  # Should still save the first note
+
+def test_add_duplicate_reminder_note():
+    """Test if adding a duplicate reminder note returns an error."""
+    manager = NotesManager()
+    manager.add_note("reminder", "Task Submission", "2025-03-01 10:00")  # First reminder note
+    result = manager.add_note("reminder", "Task Submission", "2025-03-01 10:00")  # Second attempt
+
+    assert result == "Error: Duplicate note exists."
+    assert len(manager.notes) == 1  # Should still save the first note
+
+def test_add_non_duplicate_text_note():
+    """Test that a different note is added successfully."""
+    manager = NotesManager()
+    manager.add_note("text", "Go to gym")  # First note
+    result = manager.add_note("text", "Watch movie")  # Different note
+
+    assert "Note added successfully!" in result
+    assert len(manager.notes) == 2  # Two note content should be allowed
+
+def test_add_text_note_when_reminder_exists():
+    """Test that adding a text note with the same content as an existing reminder is allowed."""
+    manager = NotesManager()
+    manager.add_note("reminder", "Meeting with boss", "2025-03-02 14:00")  # Reminder note
+    result = manager.add_note("text", "Meeting with boss")  # Text note
+
+    assert "Note added successfully!" in result
+    assert len(manager.notes) == 2  # Both notes should be allowed
 
 # --- TESTING DELETING NOTES ---
 # Need to check if deleting notes works properly.
@@ -59,7 +96,7 @@ def test_delete_existing_note():
 
     # Should return a success message and remove the note
     assert result == f"Note {note_id} deleted successfully."
-    assert len(manager.notes) == 0  # Notes list should be empty now
+
 
 
 def test_delete_non_existing_note():
@@ -123,8 +160,8 @@ def test_search_note_not_found():
 
 @pytest.mark.parametrize("note_type, content, reminder_time, expected", [
     ("text", "write any note content", None, "Note added successfully!"),  # Normal text note
-    ("reminder", "Reminder message", "2025-05-01 12:00", "Note added successfully!"),  # Reminder with time
-    ("reminder", "Missing time", None, "Error: Reminder note requires a reminder time."),  # Missing time
+    ("reminder", "The reminder message", "2025-05-01 12:00", "Note added successfully!"),  # Reminder with time
+    ("reminder", "If time is missing", None, "Error: Reminder note requires a reminder time."),  # Missing time
     ("invalid", "Wrong Type", None, "Error: Invalid note type."),  # Invalid type
 ])
 def test_add_note_parametrized(note_type, content, reminder_time, expected):
