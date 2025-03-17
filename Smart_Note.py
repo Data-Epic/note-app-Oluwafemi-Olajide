@@ -1,5 +1,7 @@
 from datetime import datetime
-# 1.
+
+# 1. Create a base class Note
+
 class Note:
     """Base class of Note"""
 
@@ -14,29 +16,29 @@ class Note:
     def display(self):  # defining the method to display the note details
         return f"[{self.note_id}] {self.created_at.strftime('%Y-%m-%d %H:%M:%S')} - {self.content}"
 
-## OOP CONCEPTS USED HERE :
+    ## OOP CONCEPTS USED HERE :
     """ Encapsulation : Note class encapsulates attributes (content, created_at, note_id)
          Abstraction : display() method provides a simple way to retrieve note details without exposing its internal attributes."""
 
-#2. Inheritance from the Base class (TextNote, ReminderNote)
+# 2. Create a Inheritance from the Base class (TextNote, ReminderNote)
 
 class TextNote(Note):  # This includes a text note that extends the base note class to specify its a text note
     def display(self):  # To override the base note class method
         return f"Text Note {super().display()}"
 
-## OOP CONCEPTS USED HERE :
+    ## OOP CONCEPTS USED HERE :
     """Inheritance: TextNote inherits attributes & methods from Note
     Polymorphism: It overrides the display() method"""
 
-class ReminderNote(Note):  # This is a note with a reminder date and time in it
-    def __init__(self, content, reminder_time):  # It extends the note attribute with an added reminder attribute
-        super().__init__(content)  # Calls the content in the base class and keeps it private
-        self.reminder_time = reminder_time
+class ReminderNote(Note):
+    def __init__(self, content, reminder_time):
+        super().__init__(content)
+        self.reminder_time = reminder_time  # Assume it's already validated
 
     def display(self):
-        return f"Reminder Note {super().display()} | Reminder Date&Time: {self.reminder_time}"
+        return f"Reminder Note {super().display()} | Reminder Date&Time: {self.reminder_time.strftime('%Y-%m-%d %H:%M')}"
 
-## OOP CONCEPTS USED HERE :
+    ## OOP CONCEPTS USED HERE :
     """Inheritance, Polymorphism, Encapsulation"""
 
 # 3. Defining the Note Manager Class
@@ -46,12 +48,24 @@ class NotesManager:
     def __init__(self):  # This will initialize an empty list to store the notes
         self.notes = []
 
-    def add_note(self, note_type, content, reminder_time=None):  # This will create a new note and add it to the list
+    def add_note(self, note_type, content, reminder_time=None):
+        
+        # Check for duplicate notes
+        for note in self.notes:
+            if note.content == content and isinstance(note, (TextNote if note_type == "text" else ReminderNote)):
+                return "Error: Duplicate note exists."
+
         if note_type == "text":
             note = TextNote(content)
         elif note_type == "reminder":
-            if not reminder_time:  # This will ensure a reminder time is given by the user
+            if not reminder_time:
                 return "Error: Reminder note requires a reminder time."
+            # Ensure to validate reminder_time BEFORE creating ReminderNote
+            try:
+                reminder_time = datetime.strptime(reminder_time, "%Y-%m-%d %H:%M")
+            except ValueError:
+                return "Error: Invalid datetime format. Use YYYY-MM-DD HH:MM."
+
             note = ReminderNote(content, reminder_time)
         else:
             return "Error: Invalid note type."
@@ -59,12 +73,13 @@ class NotesManager:
         self.notes.append(note)
         return f"Note added successfully! (ID: {note.note_id})"
 
-## OOP CONCEPTS USED HERE :
+
+    ## OOP CONCEPTS USED HERE :
     """Encapsulation: keeps all self.notes private to the NoteManager class
     Abstraction: Users just need to call add_note(), without worrying about object creation details
     Polymorphism: The method here works for both the TextNote and ReminderNote, despite their differences"""
 
-    # Delete Action
+    # 3.1. Delete Action
     def delete_note(self, note_id):  # Deleting notes by their unique ID
         for note in self.notes:
             if note.note_id == note_id:
@@ -72,14 +87,14 @@ class NotesManager:
                 return f"Note {note_id} deleted successfully."
         return "Error: Note ID not found."
 
-    # Showing Action
+    # 3.2. Showing Action
     def show_note(self):  # Displaying the notes
         if not self.notes:
             return "No notes available."
         return "\n".join(note.display() for note in self.notes)
         """We can see polymorphism in action here where the display() method is called on different note types, having different implementations."""
 
-    # Searching for a note
+    # 3.3. Searching for a note
     def search_note(self, keyword):
         results = [note.display() for note in self.notes if keyword.lower() in note.content.lower()]
         return "\n".join(results) if results else "No matching note found."
@@ -133,3 +148,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
